@@ -34,7 +34,7 @@ public class AssessmentServlet extends HttpServlet {
     String searchKeyword = parseQueryString(queryString).get("search");
 
     try {
-      ArrayList<HashMap> allNodes = null;
+      ArrayList<ContentNode> allNodes = null;
       Session session = repository.login(new SimpleCredentials("admin", "admin".toCharArray()));
       Workspace workspace = session.getWorkspace();
 
@@ -58,21 +58,32 @@ public class AssessmentServlet extends HttpServlet {
     }
   }
 
-  private ArrayList<HashMap> listNodes(NodeIterator iterator) throws RepositoryException {
-    ArrayList<HashMap> response = new ArrayList<>();
+  /**
+   * Lists all nodes.
+   * @param iterator
+   * @return HAshMap with name and identifier.
+   * @throws RepositoryException
+   */
+  private ArrayList<ContentNode> listNodes(NodeIterator iterator) throws RepositoryException {
+    ArrayList<ContentNode> response = new ArrayList<>();
 
     while (iterator.hasNext()) {
       Node nextNode = iterator.nextNode();
-      HashMap<String, String> item = new HashMap<>();
-      item.put("name", nextNode.getName());
-      item.put("identifier", nextNode.getIdentifier());
-      response.add(item);
+      ContentNode node = new ContentNode(nextNode.getName(), nextNode.getProperties());
+      response.add(node);
     }
 
     return response;
   }
 
-  private ArrayList<HashMap> findDescendants(Node currentNode, ArrayList<HashMap> allNodes) throws RepositoryException {
+  /**
+   * Find descendants of an existing node
+   * @param currentNode Starting node
+   * @param allNodes Initial storage for which you want to store all descendant nodes.
+   * @return Descendant nodes.
+   * @throws RepositoryException
+   */
+  private ArrayList<ContentNode> findDescendants(Node currentNode, ArrayList<ContentNode> allNodes) throws RepositoryException {
     NodeIterator iterator = currentNode.getNodes();
 
     while (iterator.hasNext()) {
@@ -80,10 +91,7 @@ public class AssessmentServlet extends HttpServlet {
 
       if (nextNode.isNode() && !nextNode.isNodeType("hippofacnav:facetnavigation")) {
         if (!nextNode.getNodes().hasNext()) {
-          HashMap<String, String> res = new HashMap<>();
-          res.put("name", nextNode.getName());
-          res.put("identifier", nextNode.getIdentifier());
-          allNodes.add(res);
+          allNodes.add(new ContentNode(nextNode.getName(), nextNode.getProperties()));
           log.info("Added descendant node; " + nextNode.getName());
         }
         findDescendants(nextNode, allNodes);
@@ -93,6 +101,12 @@ public class AssessmentServlet extends HttpServlet {
     return allNodes;
   }
 
+  /**
+   * Parses a query string and returns a map.
+   * @param queryString
+   * @return Returns key value pair of query string.
+   * @throws UnsupportedEncodingException
+   */
   private static Map<String, String> parseQueryString(String queryString) throws UnsupportedEncodingException {
     if (queryString == null || queryString.isEmpty()) {
       return Collections.EMPTY_MAP;
