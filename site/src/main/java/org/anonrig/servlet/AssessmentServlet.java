@@ -34,7 +34,7 @@ public class AssessmentServlet extends HttpServlet {
     String searchKeyword = parseQueryString(queryString).get("search");
 
     try {
-      ArrayList<String> allNodes = null;
+      ArrayList<HashMap> allNodes = null;
       Session session = repository.login(new SimpleCredentials("admin", "admin".toCharArray()));
       Workspace workspace = session.getWorkspace();
 
@@ -58,17 +58,21 @@ public class AssessmentServlet extends HttpServlet {
     }
   }
 
-  private ArrayList<String> listNodes(NodeIterator iterator) throws RepositoryException {
-    ArrayList<String> response = new ArrayList<>();
+  private ArrayList<HashMap> listNodes(NodeIterator iterator) throws RepositoryException {
+    ArrayList<HashMap> response = new ArrayList<>();
 
     while (iterator.hasNext()) {
-      response.add(iterator.nextNode().getName());
+      Node nextNode = iterator.nextNode();
+      HashMap<String, String> item = new HashMap<>();
+      item.put("name", nextNode.getName());
+      item.put("identifier", nextNode.getIdentifier());
+      response.add(item);
     }
 
     return response;
   }
 
-  private ArrayList<String> findDescendants(Node currentNode, ArrayList<String> allNodes) throws RepositoryException {
+  private ArrayList<HashMap> findDescendants(Node currentNode, ArrayList<HashMap> allNodes) throws RepositoryException {
     NodeIterator iterator = currentNode.getNodes();
 
     while (iterator.hasNext()) {
@@ -76,7 +80,10 @@ public class AssessmentServlet extends HttpServlet {
 
       if (nextNode.isNode() && !nextNode.isNodeType("hippofacnav:facetnavigation")) {
         if (!nextNode.getNodes().hasNext()) {
-          allNodes.add(nextNode.getName());
+          HashMap<String, String> res = new HashMap<>();
+          res.put("name", nextNode.getName());
+          res.put("identifier", nextNode.getIdentifier());
+          allNodes.add(res);
           log.info("Added descendant node; " + nextNode.getName());
         }
         findDescendants(nextNode, allNodes);
