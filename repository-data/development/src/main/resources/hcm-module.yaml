@@ -1,0 +1,7 @@
+group: 
+  name: anonrig
+  after: hippo-cms
+project: anonrig
+module: 
+  name: anonrig-repository-data-development
+  after: anonrig-repository-data-application

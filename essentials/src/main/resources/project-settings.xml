@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project>
+  <projectNamespace>anonrig</projectNamespace>
+  <confirmParams>false</confirmParams>
+  <selectedProjectPackage>org.anonrig</selectedProjectPackage>
+  <selectedBeansPackage>org.anonrig.beans</selectedBeansPackage>
+  <selectedComponentsPackage>org.anonrig.components</selectedComponentsPackage>
+  <selectedRestPackage>org.anonrig.rest</selectedRestPackage>
+  <setupDone>false</setupDone>
+  <templateLanguage>freemarker</templateLanguage>
+  <useSamples>true</useSamples>
+  <extraTemplates>true</extraTemplates>
+</project>

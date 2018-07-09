@@ -1,0 +1,5 @@
+group: 
+  name: anonrig
+  after: hippo-cms
+project: anonrig
+module: anonrig-repository-data-webfiles

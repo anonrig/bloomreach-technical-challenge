@@ -1,0 +1,6 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/anonrig/hst:catalog:
+      jcr:primaryType: hst:catalog
+      /anonrig-catalog:
+        jcr:primaryType: hst:containeritempackage
