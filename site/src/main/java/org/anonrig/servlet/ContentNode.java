@@ -8,12 +8,22 @@ public class ContentNode {
   public String name;
   public Map<String, Object> properties;
 
+  /**
+   * @param name
+   * @param properties
+   * @throws RepositoryException
+   */
   public ContentNode(String name, PropertyIterator properties) throws RepositoryException {
     this.name = name;
     this.properties = setProperties(properties);
   }
 
-
+  /**
+   * Set properties to a map.
+   * @param properties
+   * @return Map with key as string and object as value.
+   * @throws RepositoryException
+   */
   private Map<String, Object> setProperties(PropertyIterator properties) throws RepositoryException {
     Map<String, Object> result = new HashMap<>();
     while (properties.hasNext()) {
@@ -28,6 +38,12 @@ public class ContentNode {
     return result;
   }
 
+  /**
+   * Gets value from a property.
+   * @param property
+   * @return Object
+   * @throws RepositoryException
+   */
   public Object getValueFromProperty(Property property) throws RepositoryException {
     Object value;
 
