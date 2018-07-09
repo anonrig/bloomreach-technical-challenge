@@ -175,6 +175,16 @@
     <servlet-class>org.hippoecm.hst.servlet.HstPingServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>AssessmentServlet</servlet-name>
+    <servlet-class>org.anonrig.servlet.AssessmentServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AssessmentServlet</servlet-name>
+    <url-pattern>/assessment/*</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>BinariesServlet</servlet-name>
     <url-pattern>/binaries/*</url-pattern>
