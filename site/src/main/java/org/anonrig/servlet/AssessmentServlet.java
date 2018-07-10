@@ -26,17 +26,33 @@ import org.slf4j.LoggerFactory;
 
 public class AssessmentServlet extends HttpServlet {
   private static Logger log = LoggerFactory.getLogger(AssessmentServlet.class);
+  private Session session = null;
+
+  @Override
+  public void init() {
+    Repository repository = HstServices.getComponentManager().getComponent(Repository.class.getName());
+    try {
+      this.session = repository.login(new SimpleCredentials("admin", "admin".toCharArray()));
+    } catch (RepositoryException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void destroy() {
+    if (this.session != null) {
+      this.session.logout();
+    }
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-    Repository repository = HstServices.getComponentManager().getComponent(Repository.class.getName());
     String queryString = req.getQueryString();
     String searchKeyword = parseQueryString(queryString).get("search");
 
     try {
       ArrayList<ContentNode> allNodes = null;
-      Session session = repository.login(new SimpleCredentials("admin", "admin".toCharArray()));
-      Workspace workspace = session.getWorkspace();
+      Workspace workspace = this.session.getWorkspace();
 
       // Search operation if keyword "search" and value is in query string.
       if (!Strings.isNullOrEmpty(searchKeyword)) {
@@ -52,7 +68,6 @@ public class AssessmentServlet extends HttpServlet {
 
       String response = new Gson().toJson(allNodes);
       res.getWriter().print(response);
-      session.logout();
     } catch (Exception e) {
       log.error("Exception; " +  e.toString());
       res.sendError(500, e.toString());
@@ -62,7 +77,7 @@ public class AssessmentServlet extends HttpServlet {
   /**
    * Lists all nodes.
    * @param iterator
-   * @return HAshMap with name and identifier.
+   * @return HashMap with name and identifier.
    * @throws RepositoryException
    */
   private ArrayList<ContentNode> listNodes(NodeIterator iterator) throws RepositoryException {
