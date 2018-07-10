@@ -44,7 +44,7 @@ public class ContentNode {
    * @return Object
    * @throws RepositoryException
    */
-  public Object getValueFromProperty(Property property) throws RepositoryException {
+  private Object getValueFromProperty(Property property) throws RepositoryException {
     Object value;
 
     switch (property.getType()) {
