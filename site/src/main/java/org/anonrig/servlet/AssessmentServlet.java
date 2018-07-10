@@ -52,6 +52,7 @@ public class AssessmentServlet extends HttpServlet {
 
       String response = new Gson().toJson(allNodes);
       res.getWriter().print(response);
+      session.logout();
     } catch (Exception e) {
       log.error("Exception; " +  e.toString());
       res.sendError(500, e.toString());
